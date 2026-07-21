@@ -1,0 +1,13 @@
+{
+  "python.defaultInterpreterPath": "d:\\MeatVision_Project\\.venv\\Scripts\\python.exe",
+  "python.pythonPath": "d:\\MeatVision_Project\\.venv\\Scripts\\python.exe",
+  "python.venvPath": "d:\\MeatVision_Project\\.venv\\Scripts",
+  "python.analysis.extraPaths": [
+    "D:\\MeatVision_Project\\Scripts",
+    "D:\\MeatVision_Project\\.venv\\Lib\\site-packages"
+  ],
+  "python.analysis.indexing": true,
+  "python.analysis.packageIndexDepths": {
+    "pandas": 2
+  }
+}

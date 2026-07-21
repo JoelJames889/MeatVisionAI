@@ -1,0 +1,20 @@
+Dataset,Images,Classes
+archive,13231,Fish_Data
+archive (1),10736,Species
+archive (2),2266,Meat Freshness.v1-new-dataset.multiclass
+archive (3),0,
+archive (4),6843,"Beef Freshness Dataset, Beef or Fork Dataset"
+archive (5),8432,Data_tf1_ordered
+archive (6),18430,"Fish_Dataset, NA_Fish_Dataset"
+Beef Freshness.v6-dataset-beef-v2.folder,3852,"Fresh, Half-Fresh, Spoiled"
+beef recognizion.v2i.folder,11848,"Fresh, Half-Fresh, Spoiled"
+Beef.v12i.yolov4pytorch,1739,"test, train, valid"
+Chicken Meat Detection.v3i.yolov4pytorch,1000,"test, train, valid"
+Chicken meat Yolov8.v3-third.yolov4pytorch,3216,"test, train, valid"
+meat freshness.v1i.yolov4pytorch,3750,"test, train, valid"
+Meat Project.v2i.folder,1161,"BEEF_OFFALS_FEET_LONG_CUT, BEEF_OFFALS_FEET_SHORT_CUT, BEEF_OFFALS_HEARTS_CAP_ON, BEEF_OFFALS_KIDNEYS, BEEF_OFFALS_LIPS, BEEF_OFFALS_LIVERS, BEEF_OFFALS_OMASUM_SCLADED, BEEF_OFFALS_PADDYWACKS, BEEF_OFFALS_SINEWS, BEEF_OFFALS_TRIPES_GREEN"
+Meat Quality Classification.v7i.folder,13188,"Fresh, Half-fresh, Spoiled"
+Meat Quality Detection.v1i.folder,3123,"Fresh, Spoiled"
+meat.v1i.folder,13073,"meat_fresh, meat_spoiled, poultry_fresh, poultry_spoiled"
+Meat.v1i.folder (1),365,"Horse Meat, Meat, Pork"
+meat.v2-no_split.folder,16352,"meat_fresh, meat_spoiled, poultry_fresh, poultry_spoiled"
