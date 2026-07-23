@@ -1,52 +1,104 @@
-# MeatVision
+<div align="center">
+  
+# 🥩 MeatVisionAI
+  
+**AI-Powered Meat Classification & Freshness Prediction**
 
-MeatVision is an AI-powered application designed to classify the species and freshness of meat from images. It uses advanced deep learning models to assess meat quality, making it a valuable tool for automated inspection.
+[![Python Version](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/release/python-390/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=flat&logo=fastapi)](https://fastapi.tiangolo.com/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-%23EE4C2C.svg?style=flat&logo=PyTorch&logoColor=white)](https://pytorch.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Features
-- **Species Identification**: Identifies the species of meat (Beef, Chicken, Pork, Fish).
-- **Freshness Detection**: Assesses whether the meat is fresh, half-fresh, or spoiled.
-- **Web Interface**: A FastAPI and frontend integration that allows easy image uploads and real-time predictions.
+MeatVisionAI is an advanced deep learning application designed to automate the quality inspection of meat. It classifies meat species and assesses its freshness from images, making it an invaluable tool for the food industry and automated quality assurance.
 
-## Repository Structure
-- `Backend/`: Contains the FastAPI application, prediction logic, and API endpoints.
-- `Frontend/`: Contains HTML/CSS templates for the user interface.
-- `Models/`: Directory for storing pre-trained model weights (e.g., PyTorch `.pth` files).
-- `Scripts/`: Contains utility scripts for training, data augmentation, and dataset balancing.
-- `Dataset/`: The final organized dataset for training and validation.
+</div>
 
-## Getting Started
+---
+
+## 🌟 Key Features
+
+- **Species Identification**: Accurately identifies the species of meat (Beef, Chicken, Pork, Fish).
+- **Freshness Detection**: Assesses the quality and categorizes the meat as **Fresh**, **Half-Fresh**, or **Spoiled**.
+- **Intuitive Web Interface**: A sleek, user-friendly frontend integrated with a robust FastAPI backend for real-time predictions via image upload.
+- **Dockerized**: Easy to deploy and run anywhere using Docker.
+
+## 📂 Repository Structure
+
+```text
+MeatVisionAI/
+├── Backend/        # FastAPI application, prediction logic, API endpoints
+├── Frontend/       # HTML/CSS/JS templates for the web interface
+├── Models/         # Pre-trained PyTorch model weights (.pth)
+├── Scripts/        # Utility scripts (training, data augmentation, balancing)
+├── Dataset/        # Organized datasets for model training & validation
+├── tests/          # Unit tests for the application
+├── Dockerfile      # Docker configuration for containerized deployment
+└── requirements.txt # Python dependencies
+```
+
+## 🚀 Getting Started
 
 ### Prerequisites
-- Python 3.9+
-- Docker (optional, for containerized deployment)
 
-### Local Setup
-1. Clone the repository and navigate to the root directory.
-2. Install the required dependencies:
+- [Python 3.9+](https://www.python.org/)
+- [Docker](https://www.docker.com/) (Optional, for containerized setup)
+
+### Local Installation
+
+1. **Clone the repository:**
    ```bash
+   git clone https://github.com/JoelJames889/MeatVisionAI.git
+   cd MeatVisionAI
+   ```
+
+2. **Create a virtual environment & install dependencies:**
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
    pip install -r requirements.txt
    ```
-3. Run the FastAPI server:
+
+3. **Run the FastAPI server:**
    ```bash
    uvicorn Backend.app:app --reload
    ```
-4. Access the web application at `http://127.0.0.1:8000`.
 
-## Model Training
-If you wish to train the models from scratch, refer to the scripts in the `Scripts/models/` directory. The dataset is already curated and available in the `Dataset/` directory.
+4. **Access the application:**
+   Open your browser and navigate to `http://127.0.0.1:8000`.
 
-## Testing
-Run unit tests to verify the application functionality:
+### 🐳 Docker Deployment
+
+To build and run the application using Docker:
+
+```bash
+docker-compose up --build
+```
+*(Or use `docker build -t meatvision .` and `docker run -p 8000:8000 meatvision`)*
+
+## 🧠 Model Training
+
+If you wish to train the models from scratch or experiment with the architecture:
+- Navigate to the `Scripts/models/` directory.
+- The pre-processed dataset is available in the `Dataset/` directory.
+- Run the training scripts provided to generate new `.pth` weights.
+
+## 🧪 Testing & Code Quality
+
+Run unit tests to verify functionality:
 ```bash
 pytest tests/
 ```
 
-## Code Quality
-This project uses `flake8` for linting and `black` for code formatting.
+This project adheres to strict coding standards using `flake8` and `black`:
 ```bash
 flake8 Backend Scripts
 black Backend Scripts
 ```
 
-## License
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+## 🤝 Contributing
+
+Contributions are welcome! Please read our [Contributing Guidelines](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
