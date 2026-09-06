@@ -8,23 +8,10 @@ if str(PROJECT_ROOT) not in sys.path:
 import torch
 import torch.nn.functional as F
 
-# ==========================================================
-# Add Scripts/models to Python Path
-# ==========================================================
-
-MODELS_SCRIPT = PROJECT_ROOT / "Scripts" / "models"
-if str(MODELS_SCRIPT) not in sys.path:
-    sys.path.append(str(MODELS_SCRIPT))
-
-# ==========================================================
-# Import Existing Model
-# ==========================================================
-
-from model import MeatVisionModel
-
-from Backend.preprocess import preprocess
-from Backend.utils import load_image
-from Backend.config import *
+from backend.models.architecture import MeatVisionModel
+from backend.preprocess import preprocess
+from backend.utils import load_image
+from backend.config import SPECIES_MODEL, FRESHNESS_MODEL
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -33,62 +20,44 @@ DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # ==========================================================
 
 SPECIES_CLASSES = ["Beef", "Chicken", "Fish", "Pork"]
-
 FRESHNESS_CLASSES = ["Fresh", "Half Fresh", "Spoiled"]
 
 # ==========================================================
 # LOAD MODELS
 # ==========================================================
 
-print("Loading AI Models...")
+print(f"Loading AI Models on device: {DEVICE}...")
 
-species_model = MeatVisionModel(4).get()
-
+species_model = MeatVisionModel(len(SPECIES_CLASSES)).get()
 species_model.load_state_dict(torch.load(SPECIES_MODEL, map_location=DEVICE))
-
 species_model.eval()
 species_model.to(DEVICE)
 
-print("Species Model Loaded")
-
-freshness_model = MeatVisionModel(3).get()
-
+freshness_model = MeatVisionModel(len(FRESHNESS_CLASSES)).get()
 freshness_model.load_state_dict(torch.load(FRESHNESS_MODEL, map_location=DEVICE))
-
 freshness_model.eval()
 freshness_model.to(DEVICE)
 
-print("Freshness Model Loaded")
+print("AI Models loaded successfully. System ready.")
 
-print("System Ready")
 
 # ==========================================================
-# Prediction Function
+# PREDICTION LOGIC
 # ==========================================================
-
 
 def predict(image_path: str) -> dict:
-
     image = load_image(image_path)
-
-    tensor = preprocess(image)
-
-    tensor = tensor.to(DEVICE)
+    tensor = preprocess(image).to(DEVICE)
 
     with torch.no_grad():
-
         # Species Prediction
         species_output = species_model(tensor)
-
         species_prob = F.softmax(species_output, dim=1)
-
         species_confidence, species_index = torch.max(species_prob, dim=1)
 
         # Freshness Prediction
         freshness_output = freshness_model(tensor)
-
         freshness_prob = F.softmax(freshness_output, dim=1)
-
         freshness_confidence, freshness_index = torch.max(freshness_prob, dim=1)
 
     return {

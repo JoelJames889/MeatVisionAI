@@ -1,205 +1,200 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="MeatVision AI - Deep Learning Powered Meat Classification and Freshness Detection System.">
-    <title>MeatVision AI | Command Center</title>
-    <link rel="stylesheet" href="/static/css/style.css?v=4">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MeatVision AI — Deep Learning Powered Meat Species Classification and Freshness Detection System.">
+  <title>MeatVision AI — Command Center</title>
+  <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
 
-<div class="background" aria-hidden="true"></div>
+  <div class="background" aria-hidden="true"></div>
 
-<header class="navbar glass-panel" role="banner">
-    <div class="logo" aria-label="MeatVision AI Logo">
-        <span aria-hidden="true">🥩</span> MeatVision AI
+  <!-- Navigation -->
+  <nav class="navbar glass-panel" role="navigation" aria-label="Main Navigation">
+    <div class="logo">
+      <span>⚡</span> MeatVision AI
     </div>
-    <nav class="nav-links" aria-label="Main Navigation">
-        <a href="#" aria-current="page">Dashboard</a>
-        <a href="#">Models</a>
-        <a href="#">Architecture</a>
-    </nav>
-</header>
-
-<main role="main">
-    <section class="hero" aria-labelledby="hero-title">
-        <div class="hero-badge" aria-label="System Status">System Online</div>
-        <h1 id="typing-text" class="hero-title" aria-live="polite">Next-Gen Classification</h1>
-        <p>Upload imagery to initiate Deep Learning analysis pipeline.</p>
-    </section>
-
-    <div class="main-container">
-        <section class="upload-section" aria-labelledby="upload-heading">
-            <div class="upload-card glass-panel">
-                <h2 id="upload-heading">Image Input</h2>
-                <form action="/predict" method="POST" enctype="multipart/form-data" id="uploadForm" aria-label="Image Upload Form">
-                    <label class="drop-area" id="dropArea" tabindex="0" role="button" aria-label="Drag and drop or click to upload image">
-                        <img id="imagePreview" class="image-preview" src="" alt="Preview of uploaded meat image">
-                        <input type="file" name="image" id="imageInput" accept="image/*" required hidden aria-hidden="true">
-                        <div class="upload-icon" id="uploadIcon" aria-hidden="true">📡</div>
-                        <h3 id="uploadTitle">Awaiting Image Data</h3>
-                        <p id="uploadSub">Drag & Drop or Click to Browse</p>
-                        <div id="fileName" aria-live="polite"></div>
-                    </label>
-                    <button type="submit" class="analyze-btn" aria-label="Initiate Inference">Initiate Inference</button>
-                </form>
-            </div>
-        </section>
-
-        <section class="terminal-card glass-panel" aria-labelledby="terminal-heading">
-            <header class="terminal-header">
-                <div class="dot" aria-hidden="true"></div> <h2 id="terminal-heading" class="sr-only">Server Diagnostics</h2> Server Diagnostics
-            </header>
-            <div class="terminal-body" id="terminalLog" aria-live="polite" aria-atomic="false">
-                <!-- JS inserts lines here -->
-            </div>
-        </section>
+    <div class="nav-links">
+      <a href="/" aria-current="page">Dashboard</a>
+      <a href="/health">System Status</a>
     </div>
+  </nav>
 
-    <section class="features" aria-label="System Features">
-        <article class="feature-card glass-panel">
-            <div class="feature-icon" aria-hidden="true">🔍</div>
-            <h3>EfficientNet B0</h3>
-            <p>Pre-trained Convolutional Neural Networks optimized for 224x224 RGB inputs.</p>
-        </article>
-        <article class="feature-card glass-panel">
-            <div class="feature-icon" aria-hidden="true">⚡</div>
-            <h3>PyTorch Backend</h3>
-            <p>Inference executed on CUDA-accelerated hardware for lightning-fast predictions.</p>
-        </article>
-        <article class="feature-card glass-panel">
-            <div class="feature-icon" aria-hidden="true">📊</div>
-            <h3>Mathematical Precision</h3>
-            <p>Weighted cross-entropy loss applied during training to eliminate class imbalance.</p>
-        </article>
-    </section>
-</main>
+  <!-- Hero Section -->
+  <section class="hero" aria-label="Introduction">
+    <div class="hero-badge">Deep Learning Engine v2.0</div>
+    <h1>Intelligent Meat Analysis</h1>
+    <p>Upload imagery to initiate dual-model deep learning inference for species identification and freshness quality assessment.</p>
+  </section>
 
-<footer role="contentinfo">
-    <p>MeatVision AI Command Center © 2026</p>
-</footer>
+  <!-- Main Content Grid -->
+  <main class="main-container">
 
-<script>
-    // Accessibility: Allow keyboard to trigger click on dropArea
+    <!-- Upload Card -->
+    <article class="upload-card glass-panel">
+      <h2>Upload Sample</h2>
+      <form action="/predict" method="POST" enctype="multipart/form-data" id="uploadForm">
+        <input type="file" name="image" id="imageInput" accept="image/*" required class="sr-only" aria-label="Select meat image for analysis">
+
+        <div class="drop-area" id="dropArea" role="button" tabindex="0" aria-label="Click or drag and drop an image to upload">
+          <img id="imagePreview" class="image-preview" src="" alt="Image preview">
+          <div id="uploadPlaceholder">
+            <div class="upload-icon">📤</div>
+            <h3>Click to Upload or Drag & Drop</h3>
+            <p style="color: var(--text-secondary); font-size: 0.875rem;">JPEG, PNG, WEBP — Recommended 224×224 RGB</p>
+          </div>
+          <div id="fileName"></div>
+        </div>
+
+        <button type="submit" class="analyze-btn" id="submitBtn">
+          Initiate Inference
+        </button>
+      </form>
+    </article>
+
+    <!-- Terminal Diagnostics Card -->
+    <aside class="terminal-card glass-panel" aria-label="System Diagnostics">
+      <div class="terminal-header">
+        <div class="dot" aria-hidden="true"></div>
+        System Diagnostics
+      </div>
+      <div class="terminal-body" id="terminalLog" role="log" aria-live="polite" aria-label="System log output">
+        <div class="terminal-line">[SYSTEM] Initializing MeatVision Engine v2.0...</div>
+        <div class="terminal-line">[CUDA/CPU] PyTorch Inference Backend Loaded.</div>
+        <div class="terminal-line">[TORCH] Loading 'species_model.pth' (16.3 MB)</div>
+        <div class="terminal-line">[TORCH] Loading 'freshness_model.pth' (16.3 MB)</div>
+        <div class="terminal-line">[NETWORK] FastAPI Gateway — Port 8000</div>
+        <div class="terminal-line" style="color: var(--accent-green);">✓ All systems operational. Awaiting data payload...</div>
+      </div>
+    </aside>
+
+  </main>
+
+  <!-- Features Grid -->
+  <section class="features" aria-label="Key Features">
+    <article class="feature-card glass-panel">
+      <div class="feature-icon">🧬</div>
+      <h3>Species Detection</h3>
+      <p>EfficientNet B0 Transfer Learning classifies Beef, Chicken, Fish, and Pork with 94–98% accuracy.</p>
+    </article>
+    <article class="feature-card glass-panel">
+      <div class="feature-icon">🔬</div>
+      <h3>Freshness Analysis</h3>
+      <p>Dual-model pipeline assesses quality as Fresh, Half-Fresh, or Spoiled with calibrated confidence scores.</p>
+    </article>
+    <article class="feature-card glass-panel">
+      <div class="feature-icon">⚡</div>
+      <h3>Real-Time Inference</h3>
+      <p>FastAPI backend delivers sub-second predictions with CUDA acceleration support for production workloads.</p>
+    </article>
+  </section>
+
+  <footer>
+    MeatVision AI Command Center &copy; 2026 &mdash; Built with PyTorch &amp; FastAPI
+  </footer>
+
+  <script>
+    // ============================================
+    // Terminal Typewriter Animation
+    // ============================================
+    (function() {
+      const lines = document.querySelectorAll('.terminal-line');
+      lines.forEach((line, index) => {
+        setTimeout(() => {
+          line.style.opacity = '1';
+          line.style.transition = 'opacity 0.5s ease';
+        }, 400 * (index + 1));
+      });
+    })();
+
+    // ============================================
+    // Upload Interactions
+    // ============================================
     const dropArea = document.getElementById('dropArea');
-    dropArea.addEventListener('keydown', (e) => {
-        if(e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            document.getElementById('imageInput').click();
-        }
-    });
-
-    // Typing Header
-    const text = "Next-Gen Classification";
-    const header = document.getElementById("typing-text");
-    header.innerHTML = "";
-    let i = 0;
-    function typeWriter() {
-        if (i < text.length) {
-            header.innerHTML += text.charAt(i);
-            i++;
-            setTimeout(typeWriter, 50);
-        }
-    }
-    window.onload = () => {
-        typeWriter();
-        startTerminal();
-    };
-
-    // Terminal Logic
-    const logs = [
-        "[SYSTEM] Initializing MeatVision Engine v2.0...",
-        "[CUDA] NVIDIA T4 GPU Connected.",
-        "[TORCH] Loading 'species_model.pth' (Memory: 20.5MB)",
-        "[TORCH] Loading 'freshness_model.pth' (Memory: 20.5MB)",
-        "[NETWORK] FastAPI Gateway Listening on Port 5000",
-        "[OK] System Ready.",
-        "[WAITING] Standing by for incoming image tensor..."
-    ];
-    const terminal = document.getElementById('terminalLog');
-    
-    function startTerminal() {
-        let logIndex = 0;
-        function printLog() {
-            if(logIndex < logs.length) {
-                const line = document.createElement('div');
-                line.className = 'terminal-line';
-                line.textContent = logs[logIndex];
-                terminal.appendChild(line);
-                
-                // Fade in
-                setTimeout(() => line.style.opacity = '1', 50);
-                
-                logIndex++;
-                setTimeout(printLog, 600 + Math.random() * 800);
-            }
-        }
-        setTimeout(printLog, 1000);
-    }
-
-    // Drag and Drop & Preview
-    const fileInput = document.getElementById('imageInput');
-    const fileNameDisplay = document.getElementById('fileName');
+    const imageInput = document.getElementById('imageInput');
     const imagePreview = document.getElementById('imagePreview');
-    const uploadIcon = document.getElementById('uploadIcon');
-    const uploadTitle = document.getElementById('uploadTitle');
-    const uploadSub = document.getElementById('uploadSub');
+    const uploadPlaceholder = document.getElementById('uploadPlaceholder');
+    const fileNameDisplay = document.getElementById('fileName');
+    const uploadForm = document.getElementById('uploadForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const terminalLog = document.getElementById('terminalLog');
 
-    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-        dropArea.addEventListener(eventName, e => { e.preventDefault(); e.stopPropagation(); });
+    // Click to open file picker
+    dropArea.addEventListener('click', () => imageInput.click());
+    dropArea.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        imageInput.click();
+      }
     });
 
-    ['dragenter', 'dragover'].forEach(eventName => {
-        dropArea.addEventListener(eventName, () => dropArea.classList.add('drag-active'));
-    });
-    ['dragleave', 'drop'].forEach(eventName => {
-        dropArea.addEventListener(eventName, () => dropArea.classList.remove('drag-active'));
-    });
-
-    dropArea.addEventListener('drop', e => {
-        fileInput.files = e.dataTransfer.files;
-        handleFile();
+    // Drag & Drop
+    ['dragenter', 'dragover'].forEach(event => {
+      dropArea.addEventListener(event, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropArea.classList.add('drag-active');
+      });
     });
 
-    fileInput.addEventListener('change', handleFile);
+    ['dragleave', 'drop'].forEach(event => {
+      dropArea.addEventListener(event, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropArea.classList.remove('drag-active');
+      });
+    });
 
-    function handleFile() {
-        if(fileInput.files.length > 0) {
-            const file = fileInput.files[0];
-            fileNameDisplay.textContent = file.name;
-            
-            // Generate Preview
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                imagePreview.src = e.target.result;
-                imagePreview.classList.add('active');
-                uploadIcon.style.opacity = '0';
-                uploadTitle.style.opacity = '0';
-                uploadSub.style.opacity = '0';
-            }
-            reader.readAsDataURL(file);
-        }
+    dropArea.addEventListener('drop', (e) => {
+      if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+        imageInput.files = e.dataTransfer.files;
+        handleFileSelect(e.dataTransfer.files[0]);
+      }
+    });
+
+    imageInput.addEventListener('change', () => {
+      if (imageInput.files && imageInput.files[0]) {
+        handleFileSelect(imageInput.files[0]);
+      }
+    });
+
+    function handleFileSelect(file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        imagePreview.src = e.target.result;
+        imagePreview.classList.add('active');
+        uploadPlaceholder.style.opacity = '0.15';
+        fileNameDisplay.textContent = file.name;
+
+        // Log to terminal
+        const log = document.createElement('div');
+        log.className = 'terminal-line';
+        log.style.opacity = '1';
+        log.style.color = 'var(--accent-cyan)';
+        log.textContent = `[PAYLOAD] Image received: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+        terminalLog.appendChild(log);
+      };
+      reader.readAsDataURL(file);
     }
 
-    const form = document.getElementById('uploadForm');
-    const analyzeBtn = document.querySelector('.analyze-btn');
-    form.addEventListener('submit', () => {
-        if(fileInput.files.length > 0) {
-            analyzeBtn.classList.add('loading');
-            analyzeBtn.setAttribute('aria-busy', 'true');
-            analyzeBtn.textContent = 'EXECUTING INFERENCE...';
-            
-            // Add a log to terminal
-            const line = document.createElement('div');
-            line.className = 'terminal-line';
-            line.style.color = '#eab308'; // yellow
-            line.textContent = "[PROCESSING] Extracting features from tensor...";
-            terminal.appendChild(line);
-            setTimeout(() => line.style.opacity = '1', 50);
-        }
-    });
-</script>
+    // Form submission — loading state
+    uploadForm.addEventListener('submit', (e) => {
+      if (!imageInput.files || imageInput.files.length === 0) {
+        e.preventDefault();
+        return;
+      }
+      submitBtn.classList.add('loading');
+      submitBtn.textContent = 'EXECUTING INFERENCE...';
 
+      const log = document.createElement('div');
+      log.className = 'terminal-line';
+      log.style.opacity = '1';
+      log.style.color = 'var(--accent-purple)';
+      log.textContent = '[INFERENCE] Dual-model pipeline executing...';
+      terminalLog.appendChild(log);
+    });
+  </script>
 </body>
 </html>

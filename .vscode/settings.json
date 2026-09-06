@@ -1,13 +1,12 @@
 {
   "python.defaultInterpreterPath": "d:\\MeatVision_Project\\.venv\\Scripts\\python.exe",
-  "python.pythonPath": "d:\\MeatVision_Project\\.venv\\Scripts\\python.exe",
-  "python.venvPath": "d:\\MeatVision_Project\\.venv\\Scripts",
   "python.analysis.extraPaths": [
-    "D:\\MeatVision_Project\\Scripts",
-    "D:\\MeatVision_Project\\.venv\\Lib\\site-packages"
+    "D:\\MeatVision_Project"
   ],
   "python.analysis.indexing": true,
-  "python.analysis.packageIndexDepths": {
-    "pandas": 2
+  "editor.formatOnSave": true,
+  "python.formatting.provider": "black",
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter"
   }
 }

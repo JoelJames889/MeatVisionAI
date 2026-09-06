@@ -1,9 +1,11 @@
+# ===========================================
+# Python
+# ===========================================
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
-env/
 build/
 develop-eggs/
 dist/
@@ -18,14 +20,49 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
+
+# ===========================================
+# Virtual Environments
+# ===========================================
 .env
-.venv
+.venv/
 venv/
 ENV/
+env/
 env.bak/
 venv.bak/
 
-# Dataset and uploads
-Frontend/static/uploads/*
-!Frontend/static/uploads/.gitkeep
+# ===========================================
+# IDE & Editor
+# ===========================================
+.idea/
+*.swp
+*.swo
+*~
+
+# ===========================================
+# Testing & Linting
+# ===========================================
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+
+# ===========================================
+# Project-Specific
+# ===========================================
+
+# Dataset (large, local only)
 Dataset/
+
+# Uploaded files (runtime artifacts)
+frontend/static/uploads/*
+!frontend/static/uploads/.gitkeep
+
+# Model weights (large binary files — track via Git LFS or download separately)
+# Uncomment the next line if using Git LFS for model weights:
+# models/*.pth
+
+# OS files
+.DS_Store
+Thumbs.db

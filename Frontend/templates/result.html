@@ -1,108 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="MeatVision AI - Inference Results">
-    <title>Inference Result | MeatVision AI</title>
-    <link rel="stylesheet" href="/static/css/style.css?v=4">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MeatVision AI — Inference Results Dashboard">
+  <title>Analysis Complete | MeatVision AI</title>
+  <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
 
-<div class="background" aria-hidden="true"></div>
+  <div class="background" aria-hidden="true"></div>
 
-<header class="navbar glass-panel" role="banner">
-    <div class="logo" aria-label="MeatVision AI Logo">
-        <span aria-hidden="true">🥩</span> MeatVision AI
+  <!-- Navigation -->
+  <nav class="navbar glass-panel" role="navigation" aria-label="Main Navigation">
+    <div class="logo">
+      <span>⚡</span> MeatVision AI
     </div>
-    <nav class="nav-links" aria-label="Main Navigation">
-        <a href="/">Dashboard</a>
-        <a href="#">Logs</a>
-        <a href="#">Export</a>
-    </nav>
-</header>
+    <div class="nav-links">
+      <a href="/">Dashboard</a>
+      <a href="/health">System Status</a>
+    </div>
+  </nav>
 
-<main role="main" class="result-container">
+  <!-- Results Dashboard -->
+  <main class="result-container">
     <header class="dashboard-header">
-        <h1>Analysis Complete</h1>
+      <div class="hero-badge">Analysis Complete</div>
+      <h1>Inference Results</h1>
     </header>
 
     <div class="dashboard-grid">
-        
-        <section class="preview-card glass-panel" aria-label="Scanned Meat Image Preview">
-            <img src="/static/uploads/{{ image_name }}" alt="Uploaded meat sample analyzed by AI">
-        </section>
 
-        <section class="metrics-card glass-panel" aria-label="AI Inference Results">
-            
-            <div class="info-details" role="region" aria-label="High Level Results">
-                <div class="info-box">
-                    <h2 id="species-heading" style="font-size: 12px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">Species Detected</h2>
-                    <div class="value" style="color: var(--accent-cyan);" aria-labelledby="species-heading">{{ species }}</div>
-                </div>
-                <div style="width: 1px; background: rgba(255,255,255,0.1);" aria-hidden="true"></div>
-                <div class="info-box">
-                    <h2 id="freshness-heading" style="font-size: 12px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">Freshness Level</h2>
-                    <div class="value" style="color: var(--accent-purple);" aria-labelledby="freshness-heading">{{ freshness }}</div>
-                </div>
+      <!-- Image Preview Card -->
+      <article class="preview-card glass-panel" aria-label="Analyzed Image Preview">
+        <img src="/static/uploads/{{ image_name }}" alt="Analyzed meat sample: {{ image_name }}">
+      </article>
+
+      <!-- Metrics Card -->
+      <article class="metrics-card glass-panel" aria-label="Classification Results">
+
+        <!-- Circular Progress Indicators -->
+        <div class="metrics-row">
+
+          <!-- Species Confidence Ring -->
+          <div class="circular-progress" aria-label="Species confidence: {{ species_confidence }}%">
+            <svg viewBox="0 0 120 120">
+              <circle class="circular-bg" cx="60" cy="60" r="50"></circle>
+              <circle class="circular-value circle-species"
+                cx="60" cy="60" r="50"
+                stroke-dasharray="314.16"
+                stroke-dashoffset="314.16"
+                data-target="{{ species_confidence }}">
+              </circle>
+            </svg>
+            <div class="circular-text">
+              <div class="percentage" style="color: var(--accent-cyan);">{{ species_confidence }}%</div>
+              <div class="label">Species</div>
             </div>
+          </div>
 
-            <div class="metrics-row" role="region" aria-label="Confidence Metrics">
-                <!-- Species Ring -->
-                <article class="circular-progress" aria-label="Species Confidence Score: {{ species_confidence }}%">
-                    <svg viewBox="0 0 160 160" aria-hidden="true">
-                        <circle cx="80" cy="80" r="70" class="circular-bg"></circle>
-                        <circle cx="80" cy="80" r="70" class="circular-value circle-species" 
-                                stroke-dasharray="440" stroke-dashoffset="440" 
-                                data-target="{{ species_confidence }}"></circle>
-                    </svg>
-                    <div class="circular-text" aria-hidden="true">
-                        <div class="percentage">{{ species_confidence }}%</div>
-                        <div class="label">Confidence</div>
-                    </div>
-                </article>
-
-                <!-- Freshness Ring -->
-                <article class="circular-progress" aria-label="Freshness Confidence Score: {{ freshness_confidence }}%">
-                    <svg viewBox="0 0 160 160" aria-hidden="true">
-                        <circle cx="80" cy="80" r="70" class="circular-bg"></circle>
-                        <circle cx="80" cy="80" r="70" class="circular-value circle-freshness" 
-                                stroke-dasharray="440" stroke-dashoffset="440"
-                                data-target="{{ freshness_confidence }}"></circle>
-                    </svg>
-                    <div class="circular-text" aria-hidden="true">
-                        <div class="percentage">{{ freshness_confidence }}%</div>
-                        <div class="label">Confidence</div>
-                    </div>
-                </article>
+          <!-- Freshness Confidence Ring -->
+          <div class="circular-progress" aria-label="Freshness confidence: {{ freshness_confidence }}%">
+            <svg viewBox="0 0 120 120">
+              <circle class="circular-bg" cx="60" cy="60" r="50"></circle>
+              <circle class="circular-value circle-freshness"
+                cx="60" cy="60" r="50"
+                stroke-dasharray="314.16"
+                stroke-dashoffset="314.16"
+                data-target="{{ freshness_confidence }}">
+              </circle>
+            </svg>
+            <div class="circular-text">
+              <div class="percentage" style="color: var(--accent-purple);">{{ freshness_confidence }}%</div>
+              <div class="label">Freshness</div>
             </div>
+          </div>
 
-            <div class="action-row">
-                <a href="/" class="secondary-btn" aria-label="Execute New Inference">Execute New Inference</a>
-            </div>
-            
-        </section>
-        
+        </div>
+
+        <!-- Classification Labels -->
+        <div class="info-details">
+          <div class="info-box">
+            <div class="label" style="color: var(--accent-cyan); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; font-size: 0.7rem; margin-bottom: 0.5rem;">Species Detected</div>
+            <div class="value" style="color: var(--text-primary);">{{ species }}</div>
+          </div>
+          <div class="info-box">
+            <div class="label" style="color: var(--accent-purple); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; font-size: 0.7rem; margin-bottom: 0.5rem;">Freshness Quality</div>
+            <div class="value" style="color: var(--text-primary);">{{ freshness }}</div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-row">
+          <a href="/" class="secondary-btn">Execute New Inference</a>
+        </div>
+
+      </article>
     </div>
-</main>
+  </main>
 
-<footer role="contentinfo">
-    <p>MeatVision AI Command Center © 2026</p>
-</footer>
+  <footer>
+    MeatVision AI Command Center &copy; 2026 &mdash; Built with PyTorch &amp; FastAPI
+  </footer>
 
-<script>
-    window.onload = () => {
-        const circles = document.querySelectorAll('.circular-value');
-        circles.forEach(circle => {
-            const target = parseFloat(circle.getAttribute('data-target'));
-            const offset = 440 - (440 * target / 100);
-            
-            setTimeout(() => {
-                circle.style.strokeDashoffset = offset;
-            }, 300);
+  <script>
+    // ============================================
+    // Animate Circular Progress Rings on Load
+    // ============================================
+    document.addEventListener('DOMContentLoaded', () => {
+      const circles = document.querySelectorAll('.circular-value');
+      const circumference = 2 * Math.PI * 50; // r=50
+
+      circles.forEach(circle => {
+        const target = parseFloat(circle.dataset.target) || 0;
+        const offset = circumference - (target / 100) * circumference;
+
+        // Start from full offset (empty)
+        circle.style.strokeDashoffset = circumference;
+
+        // Animate to target after a short delay
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            circle.style.strokeDashoffset = offset;
+          }, 300);
         });
-    };
-</script>
-
+      });
+    });
+  </script>
 </body>
 </html>

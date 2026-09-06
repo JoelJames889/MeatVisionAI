@@ -1,8 +1,0 @@
-=== Freshness Dataset Balancing Report ===
-
-Class: fresh - Available: 22460
-  -> Sampled: 3000 - SUCCESS (Full target reached)
-Class: halffresh - Available: 12266
-  -> Sampled: 3000 - SUCCESS (Full target reached)
-Class: spoiled - Available: 19115
-  -> Sampled: 3000 - SUCCESS (Full target reached)
