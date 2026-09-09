@@ -1,14 +1,14 @@
 import torch
+import numpy as np
 from torchvision import datasets
-from torch.utils.data import DataLoader, random_split
+from torch.utils.data import DataLoader, random_split, WeightedRandomSampler
 from utils import get_train_transform, get_test_transform
 import copy
 
 
 class DatasetLoader:
 
-    def __init__(self, data_dir, batch_size=16, workers=2):
-
+    def __init__(self, data_dir, batch_size=32, workers=2):
         self.batch_size = batch_size
         self.workers = workers
 
@@ -31,8 +31,6 @@ class DatasetLoader:
         # Apply specific transformations
         self.train_dataset = copy.deepcopy(train_ds)
         self.train_dataset.dataset.transform = get_train_transform()
-
-        # Manually extract targets for dynamic class weighting in train script
         self.train_dataset.targets = [full_dataset.targets[i] for i in train_ds.indices]
 
         self.valid_dataset = copy.deepcopy(valid_ds)
@@ -41,11 +39,21 @@ class DatasetLoader:
         self.test_dataset = copy.deepcopy(test_ds)
         self.test_dataset.dataset.transform = get_test_transform()
 
+        # Compute balanced sampler weights to handle 10:1 class imbalance
+        class_counts = np.bincount(self.train_dataset.targets)
+        class_weights = 1.0 / np.maximum(class_counts, 1)
+        sample_weights = [class_weights[target] for target in self.train_dataset.targets]
+        self.sampler = WeightedRandomSampler(
+            weights=torch.DoubleTensor(sample_weights),
+            num_samples=len(sample_weights),
+            replacement=True
+        )
+
     def loaders(self):
         train_loader = DataLoader(
             self.train_dataset,
             batch_size=self.batch_size,
-            shuffle=True,
+            sampler=self.sampler,
             num_workers=self.workers,
             drop_last=True,
         )
