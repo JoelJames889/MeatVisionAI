@@ -92,6 +92,9 @@ async def predict_image(request: Request, image: UploadFile = File(...)):
             context={
                 "request": request,
                 "image_name": image.filename,
+                "is_valid": result.get("is_valid", True),
+                "error_message": result.get("error_message", ""),
+                "detected_category": result.get("detected_category", ""),
                 "species": result["species"],
                 "species_confidence": result["species_confidence"],
                 "freshness": result["freshness"],

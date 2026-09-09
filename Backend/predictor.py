@@ -12,6 +12,7 @@ from backend.models.architecture import MeatVisionModel
 from backend.preprocess import preprocess
 from backend.utils import load_image
 from backend.config import SPECIES_MODEL, FRESHNESS_MODEL
+from backend.validator import validate_image
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -60,9 +61,29 @@ def predict(image_path: str) -> dict:
         freshness_prob = F.softmax(freshness_output, dim=1)
         freshness_confidence, freshness_index = torch.max(freshness_prob, dim=1)
 
+    species_conf_pct = round(species_confidence.item() * 100, 2)
+    freshness_conf_pct = round(freshness_confidence.item() * 100, 2)
+
+    # Validate whether the image is meat/food or an invalid non-meat image
+    val_res = validate_image(image_path, species_conf_pct)
+
+    if not val_res["is_valid"]:
+        return {
+            "is_valid": False,
+            "error_message": val_res["message"],
+            "error_code": val_res["error_code"],
+            "detected_category": val_res["detected_category"],
+            "species": "Invalid Image",
+            "species_confidence": species_conf_pct,
+            "freshness": "Invalid Image",
+            "freshness_confidence": freshness_conf_pct,
+        }
+
     return {
+        "is_valid": True,
         "species": SPECIES_CLASSES[species_index.item()],
-        "species_confidence": round(species_confidence.item() * 100, 2),
+        "species_confidence": species_conf_pct,
         "freshness": FRESHNESS_CLASSES[freshness_index.item()],
-        "freshness_confidence": round(freshness_confidence.item() * 100, 2),
+        "freshness_confidence": freshness_conf_pct,
     }
+

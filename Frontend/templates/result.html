@@ -37,6 +37,25 @@
       </article>
 
       <!-- Metrics Card -->
+      {% if not is_valid %}
+      <article class="metrics-card glass-panel" aria-label="Invalid Image Alert" style="border-left: 4px solid #ef4444;">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 1rem;">
+          <span style="font-size: 2rem;">⚠️</span>
+          <h2 style="color: #ef4444; font-size: 1.4rem; margin: 0;">Invalid / Non-Meat Image</h2>
+        </div>
+        <p style="color: #cbd5e1; line-height: 1.6; margin-bottom: 1.5rem; font-size: 0.95rem;">
+          {{ error_message }}
+        </p>
+        <div class="info-box" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem;">
+          <div style="color: #f87171; font-weight: 700; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 0.4rem;">Validation Feedback</div>
+          <div style="color: #e2e8f0; font-size: 0.9rem;">Detected Category: <strong>{{ detected_category }}</strong></div>
+          <div style="color: #94a3b8; font-size: 0.8rem; margin-top: 0.4rem;">Supported Classes: Beef, Chicken, Fish, Pork</div>
+        </div>
+        <div class="action-row">
+          <a href="/" class="secondary-btn" style="background: linear-gradient(135deg, #ef4444, #dc2626); border: none; color: white;">Try Another Image</a>
+        </div>
+      </article>
+      {% else %}
       <article class="metrics-card glass-panel" aria-label="Classification Results">
 
         <!-- Circular Progress Indicators -->
@@ -96,6 +115,7 @@
         </div>
 
       </article>
+      {% endif %}
     </div>
   </main>
 
