@@ -80,7 +80,7 @@ class TestModelArchitecture:
             model_wrapper = MeatVisionModel(num_classes)
             model = model_wrapper.get()
             # Check the final classifier layer
-            final_layer = model.classifier[1]
+            final_layer = model.classifier[2]
             assert final_layer.out_features == num_classes, (
                 f"Expected {num_classes} output features, "
                 f"got {final_layer.out_features}"
