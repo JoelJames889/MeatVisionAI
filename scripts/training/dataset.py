@@ -3,6 +3,7 @@ import numpy as np
 from torchvision import datasets
 from torch.utils.data import DataLoader, random_split, WeightedRandomSampler
 from utils import get_train_transform, get_test_transform
+from config import validate_dataset_exists
 import copy
 
 
@@ -12,6 +13,7 @@ class DatasetLoader:
         self.batch_size = batch_size
         self.workers = workers
 
+        validate_dataset_exists(data_dir, dataset_name=getattr(data_dir, "name", "species"))
         full_dataset = datasets.ImageFolder(data_dir)
         self.classes = full_dataset.classes
 
