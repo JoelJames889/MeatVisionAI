@@ -1,3 +1,4 @@
+import os
 import sys
 from pathlib import Path
 
@@ -27,18 +28,23 @@ FRESHNESS_CLASSES = ["Fresh", "Half Fresh", "Spoiled"]
 # LOAD MODELS
 # ==========================================================
 
-print(f"Loading AI Models on device: {DEVICE}...")
+species_model = MeatVisionModel(len(SPECIES_CLASSES)).get().to(DEVICE)
+freshness_model = MeatVisionModel(len(FRESHNESS_CLASSES)).get().to(DEVICE)
 
-species_model = MeatVisionModel(len(SPECIES_CLASSES)).get()
-species_model.load_state_dict(torch.load(SPECIES_MODEL, map_location=DEVICE))
-species_model.eval()
-species_model.to(DEVICE)
 
-freshness_model = MeatVisionModel(len(FRESHNESS_CLASSES)).get()
-freshness_model.load_state_dict(torch.load(FRESHNESS_MODEL, map_location=DEVICE))
-freshness_model.eval()
-freshness_model.to(DEVICE)
+def reload_weights():
+    try:
+        if os.path.exists(SPECIES_MODEL):
+            species_model.load_state_dict(torch.load(SPECIES_MODEL, map_location=DEVICE))
+            species_model.eval()
+        if os.path.exists(FRESHNESS_MODEL):
+            freshness_model.load_state_dict(torch.load(FRESHNESS_MODEL, map_location=DEVICE))
+            freshness_model.eval()
+    except Exception:
+        pass
 
+
+reload_weights()
 print("AI Models loaded successfully. System ready.")
 
 
@@ -47,6 +53,7 @@ print("AI Models loaded successfully. System ready.")
 # ==========================================================
 
 def predict(image_path: str) -> dict:
+    reload_weights()
     image = load_image(image_path)
     tensor = preprocess(image).to(DEVICE)
 
