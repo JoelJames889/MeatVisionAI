@@ -26,9 +26,14 @@ def main():
     model = MeatVisionModel(len(loader.classes)).get()
     model = model.to(DEVICE)
 
+    # Freeze backbone parameters for fast high-accuracy transfer learning
+    if hasattr(model, "features"):
+        for param in model.features.parameters():
+            param.requires_grad = False
+
     # CrossEntropyLoss with WeightedRandomSampler batch balancing
     criterion = nn.CrossEntropyLoss()
-    optimizer = AdamW(model.parameters(), lr=LEARNING_RATE)
+    optimizer = AdamW(filter(lambda p: p.requires_grad, model.parameters()), lr=LEARNING_RATE)
     scheduler = CosineAnnealingLR(optimizer, T_max=EPOCHS)
 
     trainer = Trainer(model, DEVICE, criterion, optimizer, scheduler)

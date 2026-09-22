@@ -85,3 +85,17 @@ class TestModelArchitecture:
                 f"Expected {num_classes} output features, "
                 f"got {final_layer.out_features}"
             )
+
+    def test_convnext_tiny_architecture(self):
+        """MeatVisionModel should support convnext_tiny backbone and correct output classes."""
+        from backend.models.architecture import MeatVisionModel
+
+        for num_classes in [3, 4]:
+            model_wrapper = MeatVisionModel(num_classes, backbone="convnext_tiny")
+            model = model_wrapper.get()
+            final_layer = model.classifier[2]
+            assert final_layer.out_features == num_classes, (
+                f"Expected {num_classes} output features, "
+                f"got {final_layer.out_features}"
+            )
+
