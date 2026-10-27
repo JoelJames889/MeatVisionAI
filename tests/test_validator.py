@@ -42,3 +42,54 @@ def test_validator_rejects_synthetic_monotone_image():
     finally:
         os.unlink(temp_path)
 
+
+def test_validator_rejects_unnatural_blue_scene():
+    """Test that a dominant blue sky/cyan non-meat image is rejected."""
+    with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as f:
+        img = Image.new("RGB", (224, 224), color=(30, 144, 255))
+        img.save(f, format="JPEG")
+        temp_path = f.name
+
+    try:
+        result = validate_image(temp_path, species_confidence=10.0)
+        assert result["is_valid"] is False
+        assert result["error_code"] == "NON_MEAT_IMAGE"
+        assert "Non-Meat Image Detected" in result["message"]
+    finally:
+        os.unlink(temp_path)
+
+
+def test_validator_rejects_unnatural_green_foliage():
+    """Test that a dominant green nature/foliage image is rejected."""
+    with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as f:
+        img = Image.new("RGB", (224, 224), color=(34, 139, 34))
+        img.save(f, format="JPEG")
+        temp_path = f.name
+
+    try:
+        result = validate_image(temp_path, species_confidence=10.0)
+        assert result["is_valid"] is False
+        assert result["error_code"] == "NON_MEAT_IMAGE"
+        assert "Non-Meat Image Detected" in result["message"]
+    finally:
+        os.unlink(temp_path)
+
+
+def test_validator_rejects_document_with_text():
+    """Test that a digital graphic or document with text is rejected."""
+    from PIL import ImageDraw
+
+    with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as f:
+        img = Image.new("RGB", (224, 224), color=(255, 255, 255))
+        draw = ImageDraw.Draw(img)
+        draw.text((20, 30), "TAX INVOICE AND STATEMENT\nTOTAL: $5,000", fill=(0, 0, 0))
+        img.save(f, format="JPEG")
+        temp_path = f.name
+
+    try:
+        result = validate_image(temp_path, species_confidence=10.0)
+        assert result["is_valid"] is False
+        assert result["error_code"] == "NON_MEAT_IMAGE"
+    finally:
+        os.unlink(temp_path)
+

@@ -1,9 +1,16 @@
-import torch
 import torch.nn as nn
 from torch.optim import AdamW
 from torch.optim.lr_scheduler import CosineAnnealingLR
 
-from config import *
+from config import (
+    FRESHNESS_DIR,
+    BATCH_SIZE,
+    NUM_WORKERS,
+    DEVICE,
+    LEARNING_RATE,
+    EPOCHS,
+    MODEL_DIR,
+)
 from dataset import DatasetLoader
 from model import MeatVisionModel
 from trainer import Trainer
@@ -15,7 +22,9 @@ def main():
     print("MEATVISION - FRESHNESS MODEL TRAINING")
     print("=" * 80)
 
-    loader = DatasetLoader(FRESHNESS_DIR, batch_size=BATCH_SIZE, workers=NUM_WORKERS)
+    loader = DatasetLoader(
+        FRESHNESS_DIR, batch_size=BATCH_SIZE, workers=NUM_WORKERS, task="freshness"
+    )
     train_loader, valid_loader, test_loader = loader.loaders()
 
     print("\nClasses:", loader.classes)
@@ -32,7 +41,8 @@ def main():
             param.requires_grad = False
 
     criterion = nn.CrossEntropyLoss()
-    optimizer = AdamW(filter(lambda p: p.requires_grad, model.parameters()), lr=LEARNING_RATE)
+    trainable_params = filter(lambda p: p.requires_grad, model.parameters())
+    optimizer = AdamW(trainable_params, lr=LEARNING_RATE)
     scheduler = CosineAnnealingLR(optimizer, T_max=EPOCHS)
 
     trainer = Trainer(model, DEVICE, criterion, optimizer, scheduler)

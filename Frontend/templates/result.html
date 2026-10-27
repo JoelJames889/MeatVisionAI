@@ -97,6 +97,25 @@
 
         </div>
 
+        <!-- Freshness Quality Assessment Banner -->
+        <div class="status-banner" style="border-left: 4px solid {{ freshness_color }};">
+          <div class="status-badge {% if freshness == 'Fresh' %}badge-fresh{% elif freshness == 'Half Fresh' %}badge-half-fresh{% else %}badge-spoiled{% endif %}">
+            {{ freshness }}
+          </div>
+          <div class="status-text">
+            <div class="status-title">{{ freshness_status }}</div>
+            <div class="status-desc">{{ freshness_description }}</div>
+          </div>
+        </div>
+
+        <!-- Species-Specific Inspection Guidance -->
+        <div class="guidance-card">
+          <div class="guidance-icon">🔬</div>
+          <div>
+            <strong>{{ species }} Biological Inspection Profile:</strong> {{ quality_guidance }}
+          </div>
+        </div>
+
         <!-- Classification Labels -->
         <div class="info-details">
           <div class="info-box">
@@ -105,7 +124,53 @@
           </div>
           <div class="info-box">
             <div class="label" style="color: var(--accent-purple); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; font-size: 0.7rem; margin-bottom: 0.5rem;">Freshness Quality</div>
-            <div class="value" style="color: var(--text-primary);">{{ freshness }}</div>
+            <div class="value" style="color: {{ freshness_color }};">{{ freshness }}</div>
+          </div>
+        </div>
+
+        <!-- Probability Breakdown: Species & Freshness Distributions -->
+        <div class="prob-section">
+          <div class="prob-header">
+            <span>Model Probability Breakdown</span>
+            <span>Confidence Distribution</span>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+            <!-- Species Distribution -->
+            <div>
+              <div style="font-size: 0.75rem; color: var(--accent-cyan); font-weight: 700; margin-bottom: 0.5rem; text-transform: uppercase;">Species Probabilities</div>
+              <div class="prob-bars-grid">
+                {% for sp_name, sp_pct in species_probabilities.items() %}
+                <div class="prob-bar-item">
+                  <div class="prob-bar-labels">
+                    <span class="prob-bar-name">{{ sp_name }}</span>
+                    <span class="prob-bar-pct">{{ sp_pct }}%</span>
+                  </div>
+                  <div class="prob-bar-track">
+                    <div class="prob-bar-fill fill-cyan" style="width: 0%;" data-pct="{{ sp_pct }}"></div>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+
+            <!-- Freshness Distribution -->
+            <div>
+              <div style="font-size: 0.75rem; color: var(--accent-purple); font-weight: 700; margin-bottom: 0.5rem; text-transform: uppercase;">Freshness Probabilities</div>
+              <div class="prob-bars-grid">
+                {% for fr_name, fr_pct in freshness_probabilities.items() %}
+                <div class="prob-bar-item">
+                  <div class="prob-bar-labels">
+                    <span class="prob-bar-name">{{ fr_name }}</span>
+                    <span class="prob-bar-pct">{{ fr_pct }}%</span>
+                  </div>
+                  <div class="prob-bar-track">
+                    <div class="prob-bar-fill fill-purple" style="width: 0%;" data-pct="{{ fr_pct }}"></div>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
           </div>
         </div>
 
@@ -125,7 +190,7 @@
 
   <script>
     // ============================================
-    // Animate Circular Progress Rings on Load
+    // Animate Circular Progress Rings & Bar Fills
     // ============================================
     document.addEventListener('DOMContentLoaded', () => {
       const circles = document.querySelectorAll('.circular-value');
@@ -135,15 +200,22 @@
         const target = parseFloat(circle.dataset.target) || 0;
         const offset = circumference - (target / 100) * circumference;
 
-        // Start from full offset (empty)
         circle.style.strokeDashoffset = circumference;
 
-        // Animate to target after a short delay
         requestAnimationFrame(() => {
           setTimeout(() => {
             circle.style.strokeDashoffset = offset;
           }, 300);
         });
+      });
+
+      // Animate probability distribution bars
+      const barFills = document.querySelectorAll('.prob-bar-fill');
+      barFills.forEach(bar => {
+        const pct = bar.dataset.pct || "0";
+        setTimeout(() => {
+          bar.style.width = pct + "%";
+        }, 400);
       });
     });
   </script>

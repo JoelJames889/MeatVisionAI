@@ -71,3 +71,7 @@ Thumbs.db
 *.zip
 *.tar.gz
 
+# Backups & Temporary files
+*.bak
+tmp_report/
+

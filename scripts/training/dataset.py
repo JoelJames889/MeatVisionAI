@@ -1,19 +1,37 @@
 import torch
 import numpy as np
 from torchvision import datasets
-from torch.utils.data import DataLoader, random_split, WeightedRandomSampler
+from torch.utils.data import DataLoader, Dataset, random_split, WeightedRandomSampler
 from utils import get_train_transform, get_test_transform
 from config import validate_dataset_exists
-import copy
+
+
+class TransformSubset(Dataset):
+    """Zero-copy wrapper around a Subset or Dataset applying a specific transformation."""
+
+    def __init__(self, subset, transform=None):
+        self.subset = subset
+        self.transform = transform
+
+    def __getitem__(self, idx):
+        img, label = self.subset[idx]
+        if self.transform is not None:
+            img = self.transform(img)
+        return img, label
+
+    def __len__(self):
+        return len(self.subset)
 
 
 class DatasetLoader:
 
-    def __init__(self, data_dir, batch_size=32, workers=2):
+    def __init__(self, data_dir, batch_size=32, workers=2, task: str = "species"):
         self.batch_size = batch_size
         self.workers = workers
+        self.task = task
 
-        validate_dataset_exists(data_dir, dataset_name=getattr(data_dir, "name", "species"))
+        validate_dataset_exists(data_dir, dataset_name=getattr(data_dir, "name", task))
+        # Load dataset without transform on base ImageFolder so raw PIL is passed to TransformSubset
         full_dataset = datasets.ImageFolder(data_dir)
         self.classes = full_dataset.classes
 
@@ -30,25 +48,29 @@ class DatasetLoader:
             generator=torch.Generator().manual_seed(42),
         )
 
-        # Apply specific transformations
-        self.train_dataset = copy.deepcopy(train_ds)
-        self.train_dataset.dataset.transform = get_train_transform()
-        self.train_dataset.targets = [full_dataset.targets[i] for i in train_ds.indices]
+        train_targets = [full_dataset.targets[i] for i in train_ds.indices]
 
-        self.valid_dataset = copy.deepcopy(valid_ds)
-        self.valid_dataset.dataset.transform = get_test_transform()
+        # Apply specific transformations via lightweight zero-copy wrapper
+        self.train_dataset = TransformSubset(
+            train_ds, transform=get_train_transform(task=self.task)
+        )
+        self.train_dataset.targets = train_targets
 
-        self.test_dataset = copy.deepcopy(test_ds)
-        self.test_dataset.dataset.transform = get_test_transform()
+        self.valid_dataset = TransformSubset(
+            valid_ds, transform=get_test_transform()
+        )
+        self.test_dataset = TransformSubset(
+            test_ds, transform=get_test_transform()
+        )
 
-        # Compute balanced sampler weights to handle 10:1 class imbalance
-        class_counts = np.bincount(self.train_dataset.targets)
+        # Compute balanced sampler weights to handle class imbalance
+        class_counts = np.bincount(train_targets)
         class_weights = 1.0 / np.maximum(class_counts, 1)
-        sample_weights = [class_weights[target] for target in self.train_dataset.targets]
+        sample_weights = [class_weights[target] for target in train_targets]
         self.sampler = WeightedRandomSampler(
             weights=torch.DoubleTensor(sample_weights),
             num_samples=len(sample_weights),
-            replacement=True
+            replacement=True,
         )
 
     def loaders(self):

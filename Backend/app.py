@@ -97,10 +97,37 @@ async def predict_image(request: Request, image: UploadFile = File(...)):
                 "detected_category": result.get("detected_category", ""),
                 "species": result["species"],
                 "species_confidence": result["species_confidence"],
+                "species_probabilities": result.get("species_probabilities", {}),
                 "freshness": result["freshness"],
                 "freshness_confidence": result["freshness_confidence"],
+                "freshness_probabilities": result.get("freshness_probabilities", {}),
+                "freshness_status": result.get("freshness_status", ""),
+                "freshness_description": result.get("freshness_description", ""),
+                "freshness_color": result.get("freshness_color", "#10b981"),
+                "quality_guidance": result.get("quality_guidance", ""),
             },
         )
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Inference processing failed: {str(e)}"
+        )
+
+
+@app.post("/api/predict", response_class=JSONResponse, summary="Execute Model Inference (JSON)")
+async def api_predict_image(image: UploadFile = File(...)):
+    """API endpoint accepting an uploaded meat image file and returning JSON prediction data."""
+    if not image or not image.filename:
+        raise HTTPException(status_code=400, detail="No image file provided.")
+
+    save_path = UPLOAD_FOLDER / image.filename
+
+    try:
+        with open(save_path, "wb") as buffer:
+            shutil.copyfileobj(image.file, buffer)
+
+        result = predict(str(save_path))
+        result["image_name"] = image.filename
+        return result
     except Exception as e:
         raise HTTPException(
             status_code=500, detail=f"Inference processing failed: {str(e)}"
